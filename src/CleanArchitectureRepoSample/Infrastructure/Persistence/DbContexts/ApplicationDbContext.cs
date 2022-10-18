@@ -13,19 +13,16 @@ namespace Infrastructure.Persistence.DbContexts
 {
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        private readonly DateTime _currentDateTime;
-
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            _currentDateTime = DateTime.Now;
+            Database.EnsureCreated();
         }
 
         public DbSet<AppSetting> AppSettings { get; set; }
         public DbSet<Category> Categories { get; set; }
 
-        public Task<int> SaveChangesAsync()
+        public Task<int> SaveChanges()
         {
             foreach (var entry in ChangeTracker.Entries<IAuditableEntity>())
             {
@@ -33,13 +30,13 @@ namespace Infrastructure.Persistence.DbContexts
                 {
                     case EntityState.Added:
                         entry.Entity.Author = 1; // Затычка
-                        entry.Entity.Created = _currentDateTime;
+                        entry.Entity.Created = DateTime.Now;
                         entry.Entity.Editor = 1; // Затычка
-                        entry.Entity.Modified = _currentDateTime;
+                        entry.Entity.Modified = DateTime.Now;
                         break;
                     case EntityState.Modified:
                         entry.Entity.Editor = 1; // Затычка
-                        entry.Entity.Modified = _currentDateTime;
+                        entry.Entity.Modified = DateTime.Now;
                         break;
 
                 }

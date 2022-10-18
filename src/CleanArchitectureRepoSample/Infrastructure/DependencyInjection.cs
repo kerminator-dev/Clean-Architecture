@@ -1,4 +1,6 @@
 ﻿using Application.Common.Interface;
+using Infrastructure.Persistence;
+using Infrastructure.Persistence.Configuration;
 using Infrastructure.Persistence.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +36,8 @@ namespace Infrastructure
                return provider.GetService<ApplicationDbContext>();
             });
 
+            services.AddScoped(typeof(IRepository<>), typeof(EFRepository<>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

@@ -12,6 +12,6 @@ namespace Application.Common.Interface
         
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 
-        Task<int> SaveChangesAsync();
+        Task<int> SaveChanges();
     }
 }
